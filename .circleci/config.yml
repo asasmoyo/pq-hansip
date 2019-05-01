@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: golang:1.12
+    steps:
+      - checkout
+      - run: bash ./scripts/test.sh
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - test
