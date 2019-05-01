@@ -5,6 +5,7 @@ jobs:
       - image: golang:1.12
     steps:
       - checkout
+      - setup_remote_docker
       - run: bash ./scripts/test.sh
 workflows:
   version: 2
