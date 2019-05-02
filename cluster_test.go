@@ -28,13 +28,13 @@ func (s *ClusterTestSuite) TestCreatesMasterAndSlaveConnection() {
 
 func (s *ClusterTestSuite) TestKillConnectionsAfterShutdown() {
 	s.cluster.Shutdown()
-	s.Nil(s.cluster.getConnectionManager().writer())
-	s.Nil(s.cluster.getConnectionManager().reader())
+	s.Nil(s.cluster.manager.writer())
+	s.Nil(s.cluster.manager.reader())
 }
 
 func (s *ClusterTestSuite) TestUseMasterWhenNoSlaveAvailable() {
-	s.cluster.getConnectionManager().slaves = nil
-	s.cluster.getConnectionManager().updateActiveSlaves()
+	s.cluster.manager.slaves = nil
+	s.cluster.manager.updateActiveSlaves()
 
 	var temp int
 	s.Nil(s.cluster.Query(&temp, "select 2;"))

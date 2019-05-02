@@ -2,7 +2,6 @@ package hansip
 
 import (
 	"errors"
-	"sync"
 	"time"
 
 	"github.com/go-pg/pg"
@@ -33,23 +32,7 @@ type Config struct {
 // Cluster abstracts database connections to remote postgres.
 type Cluster struct {
 	manager *connectionManager
-	mutex   sync.Mutex
-
-	conf *Config
-}
-
-func (c *Cluster) setConnectionManager(manager *connectionManager) {
-	c.mutex.Lock()
-	c.manager = manager
-	c.mutex.Unlock()
-}
-
-func (c *Cluster) getConnectionManager() *connectionManager {
-	c.mutex.Lock()
-	manager := c.manager
-	c.mutex.Unlock()
-
-	return manager
+	conf    *Config
 }
 
 // SetMaster creates a connection to given connection info and set it as master
@@ -58,7 +41,7 @@ func (c *Cluster) SetMaster(opts *pg.Options) error {
 	if err != nil {
 		return err
 	}
-	c.getConnectionManager().master = conn
+	c.manager.master = conn
 	return nil
 }
 
@@ -68,15 +51,15 @@ func (c *Cluster) AddSlave(opts *pg.Options) error {
 	if err != nil {
 		return err
 	}
-	c.getConnectionManager().addSlave(conn)
-	c.getConnectionManager().updateActiveSlaves()
+	c.manager.addSlave(conn)
+	c.manager.updateActiveSlaves()
 	return nil
 }
 
 // Query runs query to one of randomly-picked slave connection.
 // If there is no slave available, the query will be run on writer.
 func (c *Cluster) Query(dest interface{}, query string, args ...interface{}) error {
-	conn := c.getConnectionManager().reader()
+	conn := c.manager.reader()
 	if conn == nil {
 		return ErrNoSlaveAvailable
 	}
@@ -85,7 +68,7 @@ func (c *Cluster) Query(dest interface{}, query string, args ...interface{}) err
 
 // WriterExec runs a query to master connection.
 func (c *Cluster) WriterExec(query string, args ...interface{}) error {
-	conn := c.getConnectionManager().writer()
+	conn := c.manager.writer()
 	if conn == nil {
 		return ErrNoMasterAvailable
 	}
@@ -94,7 +77,7 @@ func (c *Cluster) WriterExec(query string, args ...interface{}) error {
 
 // WriterQuery runs query to master connection.
 func (c *Cluster) WriterQuery(dest interface{}, query string, args ...interface{}) error {
-	conn := c.getConnectionManager().writer()
+	conn := c.manager.writer()
 	if conn == nil {
 		return ErrNoMasterAvailable
 	}
@@ -104,14 +87,14 @@ func (c *Cluster) WriterQuery(dest interface{}, query string, args ...interface{
 // NewTransaction creates a new database transaction.
 // This method guaratees that the transaction will be run on master connection.
 func (c *Cluster) NewTransaction() (Transaction, error) {
-	conn := c.getConnectionManager().writer()
+	conn := c.manager.writer()
 	if conn == nil {
 		return nil, ErrNoMasterAvailable
 	}
-	return c.getConnectionManager().writer().newTransaction()
+	return c.manager.writer().newTransaction()
 }
 
 // Shutdown kills all connections.
 func (c *Cluster) Shutdown() {
-	c.getConnectionManager().quit()
+	c.manager.quit()
 }
