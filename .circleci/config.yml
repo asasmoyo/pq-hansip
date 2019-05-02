@@ -2,10 +2,41 @@ version: 2
 jobs:
   test:
     docker:
-      - image: golang:1.12
+      - image: circleci/golang:1.12
+      - image: postgres:11
+        name: master
+        environment:
+          POSTGRES_DB: "pq-hansip"
+          POSTGRES_USER: "pq-hansip"
+          POSTGRES_PASSWORD: "password"
+      - image: postgres:11
+        name: slave1
+        environment:
+          POSTGRES_DB: "pq-hansip"
+          POSTGRES_USER: "pq-hansip"
+          POSTGRES_PASSWORD: "password"
+      - image: postgres:11
+        name: slave2
+        environment:
+          POSTGRES_DB: "pq-hansip"
+          POSTGRES_USER: "pq-hansip"
+          POSTGRES_PASSWORD: "password"
+    environment:
+      DB_MASTER_URL: postgres://pq-hansip:password@master/pq-hansip?sslmode=disable
+      DB_SLAVE1_URL: postgres://pq-hansip:password@slave1/pq-hansip?sslmode=disable
+      DB_SLAVE2_URL: postgres://pq-hansip:password@slave2/pq-hansip?sslmode=disable
     steps:
+      - restore_cache:
+          key: gopath
       - checkout
-      - run: bash ./scripts/test.sh
+      - run: |
+          go mod download
+          go mod verify
+          go test -v -cover -race .
+      - save_cache:
+          key: gopath
+          paths:
+            - "$GOPATH"
 workflows:
   version: 2
   ci:
