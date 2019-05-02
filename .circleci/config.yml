@@ -22,9 +22,9 @@ jobs:
           POSTGRES_USER: pq-hansip
           POSTGRES_PASS: password
     environment:
-      DB_MASTER_URL: postgres://pg-hansip:password@master/pg-hansil?sslmode=disabled
-      DB_SLAVE1_URL: postgres://pg-hansip:password@slave1/pg-hansil?sslmode=disabled
-      DB_SLAVE2_URL: postgres://pg-hansip:password@slave2/pg-hansil?sslmode=disabled
+      DB_MASTER_URL: postgres://pg-hansip:password@master/pg-hansil?sslmode=disable
+      DB_SLAVE1_URL: postgres://pg-hansip:password@slave1/pg-hansil?sslmode=disable
+      DB_SLAVE2_URL: postgres://pg-hansip:password@slave2/pg-hansil?sslmode=disable
     steps:
       - checkout
       - run: |
