@@ -3,19 +3,19 @@ jobs:
   test:
     docker:
       - image: circleci/golang:1.12
-      - image: circleci/postgres:11
+      - image: postgres:11
         name: master
         environment:
           POSTGRES_DB: pq-hansip
           POSTGRES_USER: pq-hansip
           POSTGRES_PASSWORD: password
-      - image: circleci/postgres:11
+      - image: postgres:11
         name: slave1
         environment:
           POSTGRES_DB: pq-hansip
           POSTGRES_USER: pq-hansip
           POSTGRES_PASSWORD: password
-      - image: circleci/postgres:11
+      - image: postgres:11
         name: slave2
         environment:
           POSTGRES_DB: pq-hansip
