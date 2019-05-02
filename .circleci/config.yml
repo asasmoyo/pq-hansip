@@ -3,10 +3,32 @@ jobs:
   test:
     docker:
       - image: circleci/golang:1.12
+      - image: circleci/postgres:11
+        name: master
+        environment:
+          POSTGRES_DB: pq-hansip
+          POSTGRES_USER: pq-hansip
+          POSTGRES_PASS: password
+      - image: circleci/postgres:11
+        name: slave1
+        environment:
+          POSTGRES_DB: pq-hansip
+          POSTGRES_USER: pq-hansip
+          POSTGRES_PASS: password
+      - image: circleci/postgres:11
+        name: slave2
+        environment:
+          POSTGRES_DB: pq-hansip
+          POSTGRES_USER: pq-hansip
+          POSTGRES_PASS: password
+    environment:
+      DB_MASTER_URL: postgres://pg-hansip:password@master/pg-hansil?sslmode=disabled
+      DB_SLAVE1_URL: postgres://pg-hansip:password@slave1/pg-hansil?sslmode=disabled
+      DB_SLAVE2_URL: postgres://pg-hansip:password@slave2/pg-hansil?sslmode=disabled
     steps:
       - checkout
-      - setup_remote_docker
-      - run: bash ./scripts/test.sh
+      - run: |
+          bash ./scripts/test.sh
 workflows:
   version: 2
   ci:
