@@ -30,6 +30,8 @@ jobs:
           key: gopath
       - checkout
       - run: |
+          go mod download
+          go mod verify
           go test -v -cover -race .
       - save_cache:
           key: gopath
