@@ -6,21 +6,21 @@ jobs:
       - image: postgres:11
         name: master
         environment:
-          POSTGRES_DB: pq-hansip
-          POSTGRES_USER: pq-hansip
-          POSTGRES_PASSWORD: password
+          POSTGRES_DB: "pq-hansip"
+          POSTGRES_USER: "pq-hansip"
+          POSTGRES_PASSWORD: "password"
       - image: postgres:11
         name: slave1
         environment:
-          POSTGRES_DB: pq-hansip
-          POSTGRES_USER: pq-hansip
-          POSTGRES_PASSWORD: password
+          POSTGRES_DB: "pq-hansip"
+          POSTGRES_USER: "pq-hansip"
+          POSTGRES_PASSWORD: "password"
       - image: postgres:11
         name: slave2
         environment:
-          POSTGRES_DB: pq-hansip
-          POSTGRES_USER: pq-hansip
-          POSTGRES_PASSWORD: password
+          POSTGRES_DB: "pq-hansip"
+          POSTGRES_USER: "pq-hansip"
+          POSTGRES_PASSWORD: "password"
     environment:
       DB_MASTER_URL: postgres://pg-hansip:password@master/pg-hansip?sslmode=disable
       DB_SLAVE1_URL: postgres://pg-hansip:password@slave1/pg-hansip?sslmode=disable
