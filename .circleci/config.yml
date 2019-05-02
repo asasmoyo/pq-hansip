@@ -22,9 +22,9 @@ jobs:
           POSTGRES_USER: "pq-hansip"
           POSTGRES_PASSWORD: "password"
     environment:
-      DB_MASTER_URL: postgres://pg-hansip:password@master/pg-hansip?sslmode=disable
-      DB_SLAVE1_URL: postgres://pg-hansip:password@slave1/pg-hansip?sslmode=disable
-      DB_SLAVE2_URL: postgres://pg-hansip:password@slave2/pg-hansip?sslmode=disable
+      DB_MASTER_URL: postgres://pq-hansip:password@master/pq-hansip?sslmode=disable
+      DB_SLAVE1_URL: postgres://pq-hansip:password@slave1/pq-hansip?sslmode=disable
+      DB_SLAVE2_URL: postgres://pq-hansip:password@slave2/pq-hansip?sslmode=disable
     steps:
       - restore_cache:
           key: gopath
