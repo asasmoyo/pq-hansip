@@ -28,7 +28,7 @@ jobs:
     steps:
       - checkout
       - run: |
-          bash ./scripts/test.sh
+          go test -v -cover -race .
 workflows:
   version: 2
   ci:
